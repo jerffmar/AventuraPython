@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aventura Python: Lógica de Programação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Visualization & Content Choices:
+    - Slide 1 (Welcome): Text + Unicode icon (🤖). Goal: Intro. Method: Static text.
+    - Slide 2 (Logic): Text + HTML/CSS flowchart representation (simple boxes/arrows). Goal: Explain logic. Method: Static text + visual structure.
+    - Slide 3 (Variables): Text + Python code block. Interaction: JS simulates variable assignment (e.g., user sees `idade = 12`, then an output area shows "idade: 12"). Goal: Understand variables. Method: Code display + JS dynamic text update.
+    - Slide 4 (Operators): Text + Python code block. Interaction: JS quiz: "10 + 5 = ?" with an input field, JS checks answer. Or, "Is 10 > 5? (True/False)" buttons. Goal: Understand operators. Method: Code display + JS interactive quiz.
+    - Slide 5 (Input/Output): Text + Python code. Interaction: JS simulates `input()`: user types in an HTML input, JS uses this to update a simulated `print()` output. Goal: Understand I/O. Method: Code display + JS dynamic text update based on user HTML input.
+    - Slide 6 (Conditionals): Text + Python code. Interaction: JS-powered guessing game. User inputs number, JS gives feedback ("maior", "menor", "acertou!"). Goal: Understand conditionals. Method: Code display + JS interactive game.
+    - Slide 7 (Loops): Text + Python code. Interaction: JS simulates loop output, e.g., printing numbers 1 to 5 one by one, or showing tabuada results dynamically. Goal: Understand loops. Method: Code display + JS dynamic text update.
+    - Slide 8 (Functions): Text + Python code. Interaction: JS simulates function call. User might click a button "Chamar dar_boas_vindas('Aluno')", JS shows the printed output. Goal: Understand functions. Method: Code display + JS dynamic text update.
+    - Slide 9 (Challenge): Text. Interaction: User types into HTML textareas for parts of the challenge, JS gives very simple, canned feedback (not a full Python checker). Goal: Apply learning. Method: Text + JS provides non-evaluative feedback.
+    - Slide 10 (Next Steps): Text. Goal: Guide further learning. Method: Static text.
+    CONFIRMING NO SVG/Mermaid, supporting the DESIGNED structure with interactive HTML/CSS/JS elements. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .slide-content {
+            display: none;
+        }
+        .slide-content.active {
+            display: block;
+        }
+        .code-block {
+            background-color: #f3f4f6; /* Tailwind gray-100 */
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            padding: 1rem; /* Tailwind p-4 */
+            overflow-x: auto;
+            font-family: monospace;
+            white-space: pre;
+        }
+        .interactive-area {
+            border: 2px dashed #60a5fa; /* Tailwind blue-400 */
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.375rem;
+            background-color: #eff6ff; /* Tailwind blue-50 */
+        }
+        .nav-button {
+            background-color: #0d9488; /* Tailwind teal-600 */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-button:hover {
+            background-color: #0f766e; /* Tailwind teal-700 */
+        }
+        .nav-button:disabled {
+            background-color: #9ca3af; /* Tailwind gray-400 */
+            cursor: not-allowed;
+        }
+        .sidebar-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: #374151; /* Tailwind gray-700 */
+        }
+        .sidebar-link:hover {
+            background-color: #d1d5db; /* Tailwind gray-300 */
+        }
+        .sidebar-link.active {
+            background-color: #0d9488; /* Tailwind teal-600 */
+            color: white;
+            font-weight: bold;
+        }
+        .icon-placeholder {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #0d9488; /* Tailwind teal-600 */
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-stone-800">
+
+    <div class="container mx-auto p-4 max-w-6xl">
+        <header class="text-center py-8">
+            <h1 class="text-4xl font-bold text-teal-700">🐍 Aventura Python: Desvendando a Lógica!</h1>
+        </header>
+
+        <div class="md:flex md:space-x-6">
+            <aside class="md:w-1/4 mb-6 md:mb-0">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold mb-3 text-teal-700">Tópicos da Aula:</h2>
+                    <nav id="sidebarNav">
+                        </nav>
+                </div>
+            </aside>
+
+            <main class="md:w-3/4">
+                <div id="slidesContainer" class="bg-white p-6 rounded-lg shadow-md min-h-[60vh]">
+                    <div class="slide-content" data-title="Bem-vindos!">
+                        <div class="icon-placeholder">🤖</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">Bem-vindos ao Mundo da Programação!</h2>
+                        <p class="mb-2">Olá, futuros programadores! 👋</p>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">O que é Programação?</h3>
+                        <ul class="list-disc list-inside space-y-1 mb-4">
+                            <li>É como dar instruções muito detalhadas para um computador.</li>
+                            <li>Pense em uma receita de bolo: cada passo é uma instrução. O computador segue essas instruções para fazer algo.</li>
+                            <li>Nós usamos uma "linguagem" que o computador entende, e hoje vamos aprender um pouco de <strong>Python</strong>!</li>
+                        </ul>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Por que Python?</h3>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>É uma linguagem muito popular, fácil de aprender e poderosa.</li>
+                            <li>Usada em jogos, aplicativos, sites e até em inteligência artificial!</li>
+                        </ul>
+                    </div>
+
+                    <div class="slide-content" data-title="Lógica de Programação">
+                        <div class="icon-placeholder">🧭</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">O que é Lógica de Programação?</h2>
+                        <p class="mb-2">Antes de escrever as instruções, precisamos <strong>pensar</strong> nos passos!</p>
+                        <p class="mb-2"><strong>Lógica de Programação</strong> é a arte de organizar o pensamento para resolver um problema.</p>
+                        <p class="mb-4">É como planejar o caminho para chegar a um tesouro:</p>
+                        <ol class="list-decimal list-inside space-y-1 mb-4 bg-amber-50 p-3 rounded-md">
+                            <li>Sair de casa.</li>
+                            <li>Virar à direita na rua principal.</li>
+                            <li>Andar 3 quarteirões.</li>
+                            <li>Virar à esquerda... e assim por diante!</li>
+                        </ol>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Exemplo: Como fazer um sanduíche?</h3>
+                        <ol class="list-decimal list-inside space-y-1 bg-blue-50 p-3 rounded-md">
+                            <li>Pegar dois pães.</li>
+                            <li>Passar manteiga em um pão.</li>
+                            <li>Colocar queijo.</li>
+                            <li>Colocar presunto.</li>
+                            <li>Colocar o outro pão por cima.</li>
+                            <li>Pronto! 🥪</li>
+                        </ol>
+                    </div>
+
+                    <div class="slide-content" data-title="Variáveis">
+                        <div class="icon-placeholder">📦</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">Variáveis - Guardando Informações</h2>
+                        <p class="mb-2">Imagine uma <strong>variável</strong> como uma caixa com um nome.</p>
+                        <p class="mb-2">Dentro dessa caixa, podemos guardar informações (números, textos, etc.).</p>
+                        <p class="mb-4">O nome da caixa nos ajuda a encontrar a informação depois.</p>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Exemplos em Python:</h3>
+                        <div class="code-block">
+# Criando uma variável para guardar seu nome
+nome = "Maria"
+
+# Criando uma variável para guardar sua idade
+idade = 12
+
+# Criando uma variável para guardar a média das suas notas
+media_notas = 8.5
+
+# Podemos mudar o que está dentro da caixa!
+idade = idade + 1 # Agora a idade é 13
+
+print(nome)
+print(idade)
+print(media_notas)
+                        </div>
+                        <div class="interactive-area">
+                            <p class="font-semibold mb-2">Simulação Interativa:</p>
+                            <button id="varSimBtn" class="nav-button mb-2">Ver Simulação</button>
+                            <div id="varSimOutput" class="p-2 bg-white rounded border border-gray-300 min-h-[50px]"></div>
+                        </div>
+                    </div>
+
+                    <div class="slide-content" data-title="Operadores">
+                         <div class="icon-placeholder">🧮</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">Operadores - Fazendo Contas e Comparações</h2>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Operadores Matemáticos:</h3>
+                        <ul class="list-disc list-inside space-y-1 mb-4">
+                            <li><code>+</code> (Adição)</li>
+                            <li><code>-</code> (Subtração)</li>
+                            <li><code>*</code> (Multiplicação)</li>
+                            <li><code>/</code> (Divisão)</li>
+                        </ul>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Operadores de Comparação:</h3>
+                        <ul class="list-disc list-inside space-y-1 mb-4">
+                            <li><code>==</code> (É igual a?)</li>
+                            <li><code>&gt;</code> (É maior que?)</li>
+                            <li><code>&lt;</code> (É menor que?)</li>
+                            <li><code>&gt;=</code> (É maior ou igual a?)</li>
+                            <li><code>&lt;=</code> (É menor ou igual a?)</li>
+                            <li><code>!=</code> (É diferente de?)</li>
+                        </ul>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Exemplos em Python:</h3>
+                        <div class="code-block">
+# Operadores Matemáticos
+num1 = 10
+num2 = 5
+soma = num1 + num2          # Resultado: 15
+subtracao = num1 - num2     # Resultado: 5
+multiplicacao = num1 * num2 # Resultado: 50
+divisao = num1 / num2       # Resultado: 2.0
+
+# Operadores de Comparação
+# idade_permitida = 16
+# sua_idade = 12
+# print("Pode dirigir?", sua_idade >= idade_permitida) # Resultado: False
+                        </div>
+                        <div class="interactive-area">
+                            <p class="font-semibold mb-2">Teste seu conhecimento:</p>
+                            <label for="opQuizInput" class="mr-2">Quanto é 10 + 5?</label>
+                            <input type="number" id="opQuizInput" class="border border-gray-300 p-1 rounded w-20">
+                            <button id="opQuizBtn" class="nav-button ml-2">Verificar</button>
+                            <p id="opQuizOutput" class="mt-2"></p>
+                        </div>
+                    </div>
+
+                    <div class="slide-content" data-title="Entrada e Saída">
+                        <div class="icon-placeholder">⌨️➡️🖥️</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">Entrada e Saída de Dados</h2>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Saída de Dados (<code>print()</code>):</h3>
+                        <p class="mb-2">É como o computador "fala" com você. Mostra mensagens, resultados, etc.</p>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Entrada de Dados (<code>input()</code>):</h3>
+                        <p class="mb-4">É como você "fala" com o computador. Pede para o usuário digitar alguma informação.</p>
+                         <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Exemplos em Python:</h3>
+                        <div class="code-block">
+# print("Olá! Qual é o seu nome?")
+# seu_nome = input() # Usuário digita o nome
+# print("Que nome legal, " + seu_nome + "!")
+
+# print("Quantos anos você tem?")
+# sua_idade_str = input()
+# sua_idade = int(sua_idade_str)
+# print("Uau! Em 10 anos você terá", sua_idade + 10, "anos!")
+                        </div>
+                        <div class="interactive-area">
+                            <p class="font-semibold mb-2">Simulação Interativa:</p>
+                            <label for="ioSimInputNome" class="mr-2">Digite seu nome:</label>
+                            <input type="text" id="ioSimInputNome" class="border border-gray-300 p-1 rounded mb-2">
+                            <button id="ioSimBtn" class="nav-button ml-2">Enviar</button>
+                            <div id="ioSimOutput" class="p-2 bg-white rounded border border-gray-300 min-h-[30px] mt-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="slide-content" data-title="Condicionais">
+                        <div class="icon-placeholder">🤔</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">Condicionais (Se... Então... Senão...)</h2>
+                        <p class="mb-2">Às vezes, o computador precisa tomar decisões.</p>
+                        <p class="mb-2">"Se" algo for verdade, "então" faça uma coisa. "Senão", faça outra.</p>
+                        <p class="mb-4">Usamos <code>if</code>, <code>elif</code> (senão se) e <code>else</code> (senão).</p>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Exemplo: Jogo de Adivinhação Simples</h3>
+                        <div class="code-block">
+# numero_secreto = 7
+# print("Tente adivinhar o número secreto (entre 1 e 10):")
+# palpite_str = input()
+# palpite = int(palpite_str)
+
+# if palpite == numero_secreto:
+#     print("Parabéns! Você acertou!")
+# elif palpite < numero_secreto:
+#     print("Que pena! O número secreto é maior.")
+# else: # palpite > numero_secreto
+#     print("Que pena! O número secreto é menor.")
+                        </div>
+                        <div class="interactive-area">
+                            <p class="font-semibold mb-2">Jogo Interativo: Adivinhe o Número (1-10)</p>
+                            <label for="guessInput" class="mr-2">Seu palpite:</label>
+                            <input type="number" id="guessInput" class="border border-gray-300 p-1 rounded w-20">
+                            <button id="guessBtn" class="nav-button ml-2">Adivinhar!</button>
+                            <p id="guessOutput" class="mt-2"></p>
+                        </div>
+                    </div>
+
+                    <div class="slide-content" data-title="Laços de Repetição">
+                        <div class="icon-placeholder">🔄</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">Laços de Repetição</h2>
+                        <p class="mb-2">E se quisermos que o computador repita uma tarefa muitas vezes?</p>
+                        <ul class="list-disc list-inside space-y-1 mb-4">
+                            <li><strong><code>for</code></strong>: Para repetir um número específico de vezes.</li>
+                            <li><strong><code>while</code></strong>: Para repetir enquanto uma condição for verdadeira.</li>
+                        </ul>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Exemplos em Python:</h3>
+                        <div class="code-block">
+# Usando 'for' para contar até 5
+# print("Contando com 'for':")
+# for i in range(1, 6):
+#     print(i)
+
+# Usando 'while' para contar até 3
+# print("Contando com 'while':")
+# contador = 1
+# while contador <= 3:
+#     print(contador)
+#     contador = contador + 1
+                        </div>
+                         <div class="interactive-area">
+                            <p class="font-semibold mb-2">Simulação de Laço 'for':</p>
+                            <button id="loopForBtn" class="nav-button mb-2">Contar até 5 (for)</button>
+                            <div id="loopForOutput" class="p-2 bg-white rounded border border-gray-300 min-h-[50px]"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="slide-content" data-title="Funções">
+                        <div class="icon-placeholder">🧩</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">Funções - Organizando o Código</h2>
+                        <p class="mb-2">Uma <strong>função</strong> é um bloco de código que faz uma tarefa específica.</p>
+                        <p class="mb-2">É como criar um "mini-programa" que podemos usar várias vezes.</p>
+                        <p class="mb-2">Ajuda a organizar o código e evitar repetições.</p>
+                        <p class="mb-4">Usamos a palavra <code>def</code> para criar uma função.</p>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Exemplo em Python:</h3>
+                        <div class="code-block">
+# Definindo uma função para dar as boas-vindas
+# def dar_boas_vindas(nome_pessoa):
+#     print("Olá,", nome_pessoa + "! Seja bem-vindo(a)!")
+#     print("Espero que você goste de programar!")
+
+# Chamando a função (usando ela)
+# dar_boas_vindas("João")
+
+# Função que calcula o dobro de um número
+# def calcular_dobro(numero):
+#     dobro = numero * 2
+#     return dobro
+# resultado = calcular_dobro(5) # resultado será 10
+                        </div>
+                        <div class="interactive-area">
+                            <p class="font-semibold mb-2">Simulação de Função:</p>
+                            <label for="funcInputNome" class="mr-2">Nome para boas-vindas:</label>
+                            <input type="text" id="funcInputNome" value="Visitante" class="border border-gray-300 p-1 rounded mb-2">
+                            <button id="funcSimBtn" class="nav-button ml-2">Chamar Função</button>
+                            <div id="funcSimOutput" class="p-2 bg-white rounded border border-gray-300 min-h-[50px] mt-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="slide-content" data-title="Desafio!">
+                        <div class="icon-placeholder">💡</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">Desafio!</h2>
+                        <p class="mb-2"><strong>Desafio:</strong> Crie um programa que peça ao usuário para digitar dois números.</p>
+                        <p class="mb-4">Depois, o programa deve dizer qual é o <strong>maior</strong> número.</p>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Pense nos passos:</h3>
+                        <ol class="list-decimal list-inside space-y-1 mb-4 bg-amber-50 p-3 rounded-md">
+                            <li>Pedir o primeiro número (<code>input()</code>).</li>
+                            <li>Pedir o segundo número (<code>input()</code>).</li>
+                            <li>Converter os números para tipo numérico (<code>int()</code>).</li>
+                            <li>Comparar os dois números (<code>if</code>, <code>else</code>).</li>
+                            <li>Mostrar o resultado (<code>print()</code>).</li>
+                        </ol>
+                        <div class="interactive-area">
+                            <p class="font-semibold mb-2">Tente resolver o desafio (simulado):</p>
+                            <label for="desafioNum1" class="block mb-1">Primeiro número:</label>
+                            <input type="number" id="desafioNum1" class="border border-gray-300 p-1 rounded w-full mb-2">
+                            <label for="desafioNum2" class="block mb-1">Segundo número:</label>
+                            <input type="number" id="desafioNum2" class="border border-gray-300 p-1 rounded w-full mb-2">
+                            <button id="desafioBtn" class="nav-button">Verificar Maior</button>
+                            <p id="desafioOutput" class="mt-2"></p>
+                        </div>
+                    </div>
+
+                    <div class="slide-content" data-title="Próximos Passos">
+                        <div class="icon-placeholder">🚀</div>
+                        <h2 class="text-3xl font-semibold mb-4 text-teal-600">Próximos Passos!</h2>
+                        <p class="mb-2"><strong>Parabéns!</strong> Você deu os primeiros passos na lógica de programação e em Python!</p>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">Onde praticar?</h3>
+                        <ul class="list-disc list-inside space-y-1 mb-4">
+                            <li>Sites como Replit, Google Colab (online, não precisa instalar nada!).</li>
+                            <li>Instalar Python no seu computador.</li>
+                            <li>Plataformas de desafios de programação (ex: Codecademy, HackerRank - comece com os fáceis!).</li>
+                            <li>
+                                Quer aprender brincando? Visite o <a href="https://code.org" target="_blank" class="text-blue-600 hover:underline font-bold">Code.org</a>!
+                                Lá você encontra cursos interativos, jogos e atividades que ensinam os fundamentos da programação de forma divertida, mesmo que você nunca tenha programado antes. É ótimo para todas as idades!
+                            </li>
+                        </ul>
+                        <h3 class="text-xl font-semibold mt-4 mb-2 text-amber-600">O que aprender a seguir?</h3>
+                        <ul class="list-disc list-inside space-y-1 mb-4">
+                            <li>Listas (para guardar várias informações juntas).</li>
+                            <li>Dicionários (para guardar informações com "chaves").</li>
+                            <li>Módulos e bibliotecas (códigos prontos que outras pessoas fizeram para nos ajudar).</li>
+                            <li>Fazer seus próprios jogos simples!</li>
+                        </ul>
+                        <p class="font-semibold">Lembre-se: Programar é como aprender um novo idioma ou tocar um instrumento. Quanto mais você pratica, melhor você fica!</p>
+                        <p class="text-2xl text-center mt-6 text-teal-600">Divirta-se programando! 🎉</p>
+                    </div>
+
+                </div>
+
+                <div class="mt-6 flex justify-between">
+                    <button id="prevBtn" class="nav-button">Anterior</button>
+                    <button id="nextBtn" class="nav-button">Próximo</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide-content');
+        const sidebarNav = document.getElementById('sidebarNav');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentSlide = 0;
+
+        function updateSidebar() {
+            sidebarNav.innerHTML = '';
+            slides.forEach((slide, index) => {
+                const title = slide.dataset.title || `Slide ${index + 1}`;
+                const link = document.createElement('a');
+                link.textContent = title;
+                link.classList.add('sidebar-link');
+                if (index === currentSlide) {
+                    link.classList.add('active');
+                }
+                link.addEventListener('click', () => goToSlide(index));
+                sidebarNav.appendChild(link);
+            });
+        }
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+            updateSidebar();
+        }
+
+        function goToSlide(index) {
+            if (index >= 0 && index < slides.length) {
+                currentSlide = index;
+                showSlide(currentSlide);
+            }
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            }
+        });
+        
+        // Initialize
+        showSlide(currentSlide);
+
+        // --- Interactive Elements Logic ---
+
+        // Slide 3: Variáveis
+        const varSimBtn = document.getElementById('varSimBtn');
+        const varSimOutput = document.getElementById('varSimOutput');
+        varSimBtn.addEventListener('click', () => {
+            let nome = "Maria";
+            let idade = 12;
+            let media_notas = 8.5;
+            idade = idade + 1;
+            varSimOutput.innerHTML = `
+                <p>Nome: ${nome}</p>
+                <p>Idade (após +1): ${idade}</p>
+                <p>Média das Notas: ${media_notas}</p>
+            `;
+        });
+
+        // Slide 4: Operadores Quiz
+        const opQuizInput = document.getElementById('opQuizInput');
+        const opQuizBtn = document.getElementById('opQuizBtn');
+        const opQuizOutput = document.getElementById('opQuizOutput');
+        opQuizBtn.addEventListener('click', () => {
+            const userAnswer = parseInt(opQuizInput.value);
+            if (userAnswer === 15) {
+                opQuizOutput.textContent = "Correto! 10 + 5 = 15. 🎉";
+                opQuizOutput.style.color = 'green';
+            } else {
+                opQuizOutput.textContent = "Tente de novo! Pense um pouco mais. 🤔";
+                opQuizOutput.style.color = 'red';
+            }
+        });
+
+        // Slide 5: Entrada e Saída Simulação
+        const ioSimInputNome = document.getElementById('ioSimInputNome');
+        const ioSimBtn = document.getElementById('ioSimBtn');
+        const ioSimOutput = document.getElementById('ioSimOutput');
+        ioSimBtn.addEventListener('click', () => {
+            const nomeDigitado = ioSimInputNome.value || "Visitante";
+            ioSimOutput.textContent = `Simulação: Olá! Qual é o seu nome? (Você digitou: ${nomeDigitado})\nQue nome legal, ${nomeDigitado}!`;
+        });
+
+        // Slide 6: Condicionais - Jogo de Adivinhação
+        const guessInput = document.getElementById('guessInput');
+        const guessBtn = document.getElementById('guessBtn');
+        const guessOutput = document.getElementById('guessOutput');
+        const numeroSecreto = Math.floor(Math.random() * 10) + 1; // Número secreto entre 1 e 10
+        let tentativas = 0;
+        guessBtn.addEventListener('click', () => {
+            const palpite = parseInt(guessInput.value);
+            tentativas++;
+            if (isNaN(palpite) || palpite < 1 || palpite > 10) {
+                guessOutput.textContent = "Por favor, digite um número entre 1 e 10.";
+                guessOutput.style.color = 'orange';
+                return;
+            }
+            if (palpite === numeroSecreto) {
+                guessOutput.textContent = `Parabéns! Você acertou em ${tentativas} tentativas! O número era ${numeroSecreto}. 🥳`;
+                guessOutput.style.color = 'green';
+                guessBtn.disabled = true; // Desabilitar botão após acertar
+            } else if (palpite < numeroSecreto) {
+                guessOutput.textContent = "Que pena! O número secreto é MAIOR. Tente de novo.";
+                guessOutput.style.color = 'red';
+            } else {
+                guessOutput.textContent = "Que pena! O número secreto é MENOR. Tente de novo.";
+                guessOutput.style.color = 'red';
+            }
+        });
+        
+        // Slide 7: Laços de Repetição
+        const loopForBtn = document.getElementById('loopForBtn');
+        const loopForOutput = document.getElementById('loopForOutput');
+        loopForBtn.addEventListener('click', () => {
+            loopForOutput.innerHTML = "Contando com 'for':<br>";
+            for (let i = 1; i <= 5; i++) {
+                loopForOutput.innerHTML += `${i}<br>`;
+            }
+        });
+
+        // Slide 8: Funções Simulação
+        const funcInputNome = document.getElementById('funcInputNome');
+        const funcSimBtn = document.getElementById('funcSimBtn');
+        const funcSimOutput = document.getElementById('funcSimOutput');
+        funcSimBtn.addEventListener('click', () => {
+            const nomePessoa = funcInputNome.value || "Amigo(a)";
+            funcSimOutput.innerHTML = `
+                <p>Simulação de 'dar_boas_vindas("${nomePessoa}")':</p>
+                <p>Olá, ${nomePessoa}! Seja bem-vindo(a)!</p>
+                <p>Espero que você goste de programar!</p>
+            `;
+        });
+
+        // Slide 9: Desafio
+        const desafioNum1 = document.getElementById('desafioNum1');
+        const desafioNum2 = document.getElementById('desafioNum2');
+        const desafioBtn = document.getElementById('desafioBtn');
+        const desafioOutput = document.getElementById('desafioOutput');
+        desafioBtn.addEventListener('click', () => {
+            const n1 = parseFloat(desafioNum1.value);
+            const n2 = parseFloat(desafioNum2.value);
+
+            if (isNaN(n1) || isNaN(n2)) {
+                desafioOutput.textContent = "Por favor, digite dois números válidos.";
+                desafioOutput.style.color = "orange";
+                return;
+            }
+
+            if (n1 > n2) {
+                desafioOutput.textContent = `O número ${n1} é maior que ${n2}. Bom trabalho!`;
+                desafioOutput.style.color = "green";
+            } else if (n2 > n1) {
+                desafioOutput.textContent = `O número ${n2} é maior que ${n1}. Isso aí!`;
+                 desafioOutput.style.color = "green";
+            } else {
+                desafioOutput.textContent = `Os números ${n1} e ${n2} são iguais. Que coincidência!`;
+                 desafioOutput.style.color = "blue";
+            }
+        });
+
+
+    </script>
+</body>
+</html>
